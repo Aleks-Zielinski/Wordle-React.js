@@ -1,0 +1,35 @@
+#LinksRow{
+    display: flex;
+    flex-direction: row;
+    height: 50px;
+    margin: 20px;
+    align-items: center;
+    justify-content: center;
+}
+#LinksRow img{
+    height: 30px;
+    transition: .7s;
+    display: block;
+    margin: 0 10px 0 10px;
+}
+#LinksRow img:hover{
+    height: 40px;
+}
+#CreditsRow p{
+    margin: 0 0 15px 0;
+    height: 25px;
+}
+#CreditsRow p:nth-child(1){
+    margin: 0 0 15px 0;
+    height: auto;
+    cursor: default;
+}
+a, a:visited{
+    color: #5865F2;
+    text-decoration: none;
+    transition: .7s;
+}
+a:hover{
+    color: rgb(152, 157, 255);
+    font-size: 110%;
+}

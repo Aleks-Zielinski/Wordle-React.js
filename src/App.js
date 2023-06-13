@@ -1,6 +1,7 @@
 import React, { useState, useRef } from 'react';
 import DATA from './data.js'
 import './App.css';
+import Links from './links.js';
 
 function Choice(){
     let i = Math.floor(Math.random() * DATA.length)
@@ -202,6 +203,7 @@ function App(){
                 </section>
                 <Keyboard />
             </section>
+            <Links />
         </>
     );
 }
