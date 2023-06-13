@@ -41,9 +41,10 @@ function Links(){
                 </a>
             </section>
             <section id="CreditsRow">
-                <p>External links:</p>
-                <p><a href={WordleLink} target="noreferrer">Original game</a></p>
-                <p><a href={WordListLink} target="noreferrer">List of 14855 words</a></p>
+                <b>Credits: </b>
+                <a href={WordleLink} target="noreferrer">Original game</a>
+                <span>, </span>
+                <a href={WordListLink} target="noreferrer">List of 14855 words</a>
             </section>
         </>
     )

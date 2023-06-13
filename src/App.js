@@ -202,8 +202,8 @@ function App(){
                     <Game />
                 </section>
                 <Keyboard />
+                <Links />
             </section>
-            <Links />
         </>
     );
 }

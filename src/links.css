@@ -19,9 +19,7 @@
     margin: 0 0 15px 0;
     height: 25px;
 }
-#CreditsRow p:nth-child(1){
-    margin: 0 0 15px 0;
-    height: auto;
+#CreditsRow b, #CreditsRow span{
     cursor: default;
 }
 a, a:visited{
@@ -31,5 +29,4 @@ a, a:visited{
 }
 a:hover{
     color: rgb(152, 157, 255);
-    font-size: 110%;
 }
