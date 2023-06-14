@@ -115,7 +115,7 @@ html{
 .Green:hover{
     background-color: rgb(0, 170, 0) !important;
 }
-@media only screen and (min-height: 700px) {
+@media only screen and (min-height: 700px) and (min-width: 540px) {
     #main{
         position: absolute;
         top: 50%;
@@ -146,7 +146,7 @@ html{
         line-height: 8vw;
     }
     .keyBoxLong{
-        width: 31vw !important; 
+        width: 30vw !important; 
         padding: 0 1vw 0 1vw !important;
         letter-spacing: 0px;
     }
