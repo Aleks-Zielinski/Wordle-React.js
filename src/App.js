@@ -36,6 +36,10 @@ function App(){
     }
 
     function HandleInput(Input){
+        if(Input === 'RESET'){
+            Reset()
+            return
+        }
         if(Round === 6){
             return
         }
@@ -96,12 +100,12 @@ function App(){
                 setRound(Round + 1)
                 setWordLen(0)
                 if(guess[0] === 1 && guess[1] === 1 && guess[2] === 1 && guess[3] === 1 && guess[4] === 1){
-                    setTitle('You won! Click here to start new game!')
+                    setTitle( Pass.toString() + '!')
                     setRound(6)
                     return
                 }
                 if(Round === 5){
-                    setTitle(Pass.toString() + '! Click here to start new game!')
+                    setTitle(Pass.toString() + '!')
                     setRound(6)
                 }
             }
@@ -133,7 +137,7 @@ function App(){
     }
     
     function SpecialKey({ Value }){
-        return <button className="keyBoxLong" onClick={() => HandleInput(Value)}>{ Value }</button>
+        return <button id={Value} className="keyBoxLong" onClick={() => HandleInput(Value)}>{ Value }</button>
     }
     
     function Keyboard(){
@@ -148,6 +152,11 @@ function App(){
         return(
             <section id="keyboard">
                 <section id="keyRow">
+                    <SpecialKey Value={'BACKSPACE'} />
+                    <SpecialKey Value={'RESET'} />
+                    <SpecialKey Value={'ENTER'} />
+                </section>
+                <section id="keyRow">
                     <Row i={0} />
                     <SpecialKey Value={'BACKSPACE'} />
                 </section>
@@ -157,6 +166,7 @@ function App(){
                 </section>
                 <section id="keyRow">
                     <Row i={2} />
+                    <SpecialKey Value={'RESET'} />
                 </section>
             </section>
         )
@@ -197,7 +207,7 @@ function App(){
     return (
         <>
             <section id="main">
-                <button id="title" onClick={ () => Reset() } ref={ ResetRef }>{ Title }</button>
+                <button id="title" ref={ ResetRef }>{ Title }</button>
                 <section id="game">
                     <Game />
                 </section>
