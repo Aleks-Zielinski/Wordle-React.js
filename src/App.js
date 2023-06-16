@@ -1,7 +1,13 @@
-import React, { useState, useRef } from 'react';
+import React, { useRef, useState } from 'react';
 import DATA from './data.js'
 import './App.css';
 import Links from './links.js';
+
+// Icons
+import ResetIcon from './Icons/RESET.png'
+import EnterIcon from './Icons/ENTER.png'
+import BackspaceIcon from './Icons/BACKSPACE.png'
+import DeleteIcon from './Icons/DELETE.png'
 
 function Choice(){
     let i = Math.floor(Math.random() * DATA.length)
@@ -22,7 +28,11 @@ function App(){
     const [Round, setRound] = useState(0)
     const [WordLen, setWordLen] = useState(0)
     const [Title, setTitle] = useState(Name)
+
     const ResetRef = useRef(null)
+    const EnterRef = useRef(null)
+    const BackspaceRef = useRef(null)
+    const DeleteRef = useRef(null)
 
     function Reset(){
         Pass = Choice()
@@ -32,7 +42,6 @@ function App(){
         setLetters([['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', '']])
         setStyles([['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', '']])
         setKeyStyles(['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''])
-        ResetRef.current.blur()
     }
 
     function HandleInput(Input){
@@ -120,6 +129,15 @@ function App(){
             }
             return
         }
+        if(Input === 'DELETE'){
+            if(WordLen !== 0){
+                let Array = Letters
+                Array[Round] = ['', '', '', '', '']
+                setLetters(Array => [...Array, `${Array.length}`])
+                setWordLen(0)
+            }
+            return
+        }
         if(!Alpha.includes(Input)){
             return
         }
@@ -136,10 +154,6 @@ function App(){
         HandleInput(e.key.toUpperCase())
     }
     
-    function SpecialKey({ Value }){
-        return <button id={Value} className="keyBoxLong" onClick={() => HandleInput(Value)}>{ Value }</button>
-    }
-    
     function Keyboard(){
         const Row = ({i}) => {
             let j = []
@@ -152,21 +166,22 @@ function App(){
         return(
             <section id="keyboard">
                 <section id="keyRow">
-                    <SpecialKey Value={'BACKSPACE'} />
-                    <SpecialKey Value={'RESET'} />
-                    <SpecialKey Value={'ENTER'} />
-                </section>
-                <section id="keyRow">
                     <Row i={0} />
-                    <SpecialKey Value={'BACKSPACE'} />
+                    <button id='KeyImg' onClick={() => HandleInput('BACKSPACE')} ref={BackspaceRef}>
+                        <img src={BackspaceIcon} alt='Backspace icon' onClick={() => BackspaceRef.current.blur()} />
+                    </button>
                 </section>
                 <section id="keyRow">
                     <Row i={1} />
-                    <SpecialKey Value={'ENTER'} />
+                    <button id='KeyImg' onClick={() => HandleInput('ENTER')} ref={EnterRef}>
+                        <img src={EnterIcon} alt='Enter icon' onClick={() => EnterRef.current.blur()} />
+                    </button>
                 </section>
                 <section id="keyRow">
                     <Row i={2} />
-                    <SpecialKey Value={'RESET'} />
+                    <button id='KeyImg' onClick={() => HandleInput('DELETE')} ref={DeleteRef}>
+                        <img src={DeleteIcon} alt='Delete icon' onClick={() => DeleteRef.current.blur()} />
+                    </button>
                 </section>
             </section>
         )
@@ -207,7 +222,12 @@ function App(){
     return (
         <>
             <section id="main">
-                <button id="title" ref={ ResetRef }>{ Title }</button>
+                <header>
+                    <h1 id="title">{ Title }</h1>
+                    <button onClick={() => Reset()} ref={ResetRef}>
+                        <img src={ResetIcon} alt='Reset icon' onClick={() => ResetRef.current.blur()} />
+                    </button>
+                </header>
                 <section id="game">
                     <Game />
                 </section>
