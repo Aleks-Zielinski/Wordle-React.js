@@ -9,6 +9,12 @@ import EnterIcon from './Icons/ENTER.png'
 import BackspaceIcon from './Icons/BACKSPACE.png'
 import DeleteIcon from './Icons/DELETE.png'
 
+const TranslateToIcon = ['RESET', 'ENTER', 'BACKSPACE', 'DELETE']
+const IconsSrc = [ResetIcon, EnterIcon, BackspaceIcon, DeleteIcon]
+/*
+const TranslateToStyle = ['Black', 'Yellow', 'Green']
+const AnimationStyles = ['BlackAnimation', 'YellowAnimation', 'GreenAnimation']*/
+
 function Choice(){
     let i = Math.floor(Math.random() * DATA.length)
     return DATA[i].toUpperCase()
@@ -28,20 +34,23 @@ function App(){
     const [Round, setRound] = useState(0)
     const [WordLen, setWordLen] = useState(0)
     const [Title, setTitle] = useState(Name)
+    const [Popup, setPopup] = useState('')
 
     const ResetRef = useRef(null)
-    const EnterRef = useRef(null)
-    const BackspaceRef = useRef(null)
-    const DeleteRef = useRef(null)
 
     function Reset(){
         Pass = Choice()
         setRound(0)
         setWordLen(0)
         setTitle(Name)
+        setPopup('')
         setLetters([['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', '']])
         setStyles([['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', ''], ['', '', '', '', '']])
         setKeyStyles(['', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', '', ''])
+    }
+
+    document.onkeydown = (e) => {
+        HandleInput(e.key.toUpperCase())
     }
 
     function HandleInput(Input){
@@ -63,10 +72,12 @@ function App(){
 
             if(WordLen === 5){
                 if(!DATA.includes(WORD())){
-                    setTitle('Not in word list')
-                    setTimeout(() => {
-                        setTitle(Name)
-                    }, 1000)
+                    if(Popup.length === 0){
+                        setPopup(<div id='Popup'>Not in word list!</div>)
+                        setTimeout(() => {
+                            setPopup('')
+                        }, 6000)
+                    }
                     return
                 }
                 let guess = [0, 0, 0, 0, 0]
@@ -108,13 +119,24 @@ function App(){
 
                 setRound(Round + 1)
                 setWordLen(0)
+                setPopup('')
                 if(guess[0] === 1 && guess[1] === 1 && guess[2] === 1 && guess[3] === 1 && guess[4] === 1){
-                    setTitle( Pass.toString() + '!')
+                    setTitle(Pass.toString() + '!')
+                    setPopup('')
+                    setPopup(<div id='Popup'>You won!</div>)
+                        setTimeout(() => {
+                            setPopup('')
+                        }, 6000)
                     setRound(6)
                     return
                 }
                 if(Round === 5){
                     setTitle(Pass.toString() + '!')
+                    setPopup('')
+                    setPopup(<div id='Popup'>{Pass.toString() + '!'}</div>)
+                        setTimeout(() => {
+                            setPopup('')
+                        }, 6000)
                     setRound(6)
                 }
             }
@@ -149,10 +171,6 @@ function App(){
             setWordLen(WordLen + 1)
         } 
     }
-
-    document.onkeydown = (e) => {
-        HandleInput(e.key.toUpperCase())
-    }
     
     function Keyboard(){
         const Row = ({i}) => {
@@ -163,55 +181,56 @@ function App(){
             })
             return(j)
         }
+        const KeyImg = (i) => {
+            const Ref = useRef(null)
+            let index = TranslateToIcon.indexOf(i.i)
+            return(
+                <button id='KeyImg' onClick={() => HandleInput(i.i)} ref={Ref}>
+                        <img src={IconsSrc[index]} alt={i.i + ' icon'} onClick={() => Ref.current.blur()} />
+                </button>
+            )
+        }
         return(
             <section id="keyboard">
                 <section id="keyRow">
                     <Row i={0} />
-                    <button id='KeyImg' onClick={() => HandleInput('BACKSPACE')} ref={BackspaceRef}>
-                        <img src={BackspaceIcon} alt='Backspace icon' onClick={() => BackspaceRef.current.blur()} />
-                    </button>
+                    <KeyImg i='BACKSPACE' />
                 </section>
                 <section id="keyRow">
                     <Row i={1} />
-                    <button id='KeyImg' onClick={() => HandleInput('ENTER')} ref={EnterRef}>
-                        <img src={EnterIcon} alt='Enter icon' onClick={() => EnterRef.current.blur()} />
-                    </button>
+                    <KeyImg i='ENTER' />
                 </section>
                 <section id="keyRow">
                     <Row i={2} />
-                    <button id='KeyImg' onClick={() => HandleInput('DELETE')} ref={DeleteRef}>
-                        <img src={DeleteIcon} alt='Delete icon' onClick={() => DeleteRef.current.blur()} />
-                    </button>
+                    <KeyImg i='DELETE' />
                 </section>
-            </section>
-        )
-    }
-
-    function Tile({Row, Column}){
-        const Word = Letters[Row - 1][Column - 1]
-        const Style = Styles[Row - 1][Column - 1]
-
-        return(
-            <div id={ Row + '' + Column } className={ Style }>{ Word }</div>
-        )
-    }
-    
-    function Row({RowNumber}){
-        const RowFor = (({Index}) => {
-            let k = []
-            for(let j = 1; j < 6; j++){
-                k.push(<Tile Row={Index} Column={j} />)
-            }
-            return(k)
-        })
-        return(
-            <section id="row">
-                <RowFor Index={RowNumber} />
             </section>
         )
     }
     
     function Game({i = 7}){
+        function Row({RowNumber}){
+            function Tile({Row, Column}){
+                const Word = Letters[Row - 1][Column - 1]
+                const Style = Styles[Row - 1][Column - 1]
+        
+                return(
+                    <div id={ Row + '' + Column } className={ Style }>{ Word }</div>
+                )
+            }
+            const RowFor = (({Index}) => {
+                let k = []
+                for(let j = 1; j < 6; j++){
+                    k.push(<Tile Row={Index} Column={j} />)
+                }
+                return(k)
+            })
+            return(
+                <section id="row">
+                    <RowFor Index={RowNumber} />
+                </section>
+            )
+        }
         let j = []
         for(let k = 1; k < i; k++){
             j.push(<Row RowNumber={k} />)
@@ -229,6 +248,7 @@ function App(){
                     </button>
                 </header>
                 <section id="game">
+                    { Popup }
                     <Game />
                 </section>
                 <Keyboard />
